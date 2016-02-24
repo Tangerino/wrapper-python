@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 '''
-This ETL parses an EGX300-CSV (Schneider Electric Gateway) and
+This ETL parses an EGX300/ComX-200 CSV file format (Schneider Electric Gateway) and
 exports it under a WIMD.IO device
 Please request an APIKEY for your device at http://wimd.io
 
@@ -12,15 +12,15 @@ Carlos Tangerino
 
 import os
 import csv
-import sys
 import getopt
 import json
-import time
 import datetime
 from xml.sax.saxutils import escape
 import codecs
 import re
 
+import sys
+import time
 from wimd import wimd
 
 
@@ -110,7 +110,7 @@ def process_file(fname, output_folder):
         i_file.seek(0)
         reader = csv.reader(i_file, dialect)
     except:
-        print "Can't open " + fname
+        print ("Can't open " + fname)
         return -1
     finally:
         feeds = []
@@ -145,12 +145,12 @@ def process_file(fname, output_folder):
                         tz = row[1]
                         ts -= datetime.timedelta(minutes=tz)
                         id = doc['devicename'] + "_" + doc['deviceid'] + "_"
-                        colnumber = 0
+                        col_number = 0
                         feed = []
                         for col in row:
-                            if colnumber >= 3:
-                                topic = topicids[colnumber]
-                                feedName = dataHeader[colnumber].decode('utf-8')
+                            if col_number >= 3:
+                                topic = topicids[col_number]
+                                feedName = dataHeader[col_number].decode('utf-8')
                                 Unit = getUnit(feedName)
                                 fk = doc['mac'] + '.' + re.sub('[^0-9a-zA-Z]', '_', feedName)
                                 fid = doc['mac'] + '.' + doc['devicename'] + '.' + str(doc['deviceid']) + '.' + Unit
@@ -163,7 +163,7 @@ def process_file(fname, output_folder):
                                     # print(feed)
                                 except:
                                     pass
-                            colnumber += 1
+                            col_number += 1
                     except:
                         pass
             row_number += 1
