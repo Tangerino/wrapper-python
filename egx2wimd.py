@@ -10,6 +10,7 @@ This is a 'under development ETL'
 Carlos Tangerino
 '''
 
+
 import os
 import csv
 import getopt
