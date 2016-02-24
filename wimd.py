@@ -119,9 +119,9 @@ class wimd(object):
             r = self.__socket.post(self.BASE_URL + 'sensor', json=payload, headers=h, verify=False)
             if r.status_code == 201 or r.status_code == 200:
                 return True, r.json()
-        except:
-            pass
-        return False, {}
+        except Exception, e:
+            return false, str(e)
+        return false,{}
 
     def sensor_add_data(self, devkey, data):
         try:
