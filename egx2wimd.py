@@ -21,6 +21,7 @@ import re
 
 import sys
 import time
+
 from wimd import wimd
 
 
@@ -46,7 +47,7 @@ def get_uom_name(feedName):
 
 
 def usage():
-    print ('Usage: egx.py -i <input files path> -o <output files path>')
+    print('Usage: egx2wimd.py -i <input files path> -o <output files path>')
 
 
 def WIMDLoadTask(doc, feeds, output_folder, sensor_id):
@@ -73,13 +74,14 @@ def WIMDLoadTask(doc, feeds, output_folder, sensor_id):
                         serie = {'id': id, 'values': values}
                         series.append(serie)
                         x = json.dumps(series)
-                        #print(x)
+                        # print(x)
                         rc, j = w.sensor_add_data(APIKEY, series)
                         if rc == True:
                             total_data_points += len(values)
                             print(
-                            datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), str(total_data_points) + ' so far',
-                            n, u)
+                                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                str(total_data_points) + ' so far',
+                                n, u)
                         else:
                             print(rc, j)
                         series = []
@@ -91,7 +93,7 @@ def WIMDLoadTask(doc, feeds, output_folder, sensor_id):
                 if rc == True:
                     total_data_points += len(values)
                     print(
-                    datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), str(total_data_points) + ' so far', n, u)
+                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), str(total_data_points) + ' so far', n, u)
                 else:
                     print(rc, j)
         else:
@@ -110,7 +112,7 @@ def process_file(fname, output_folder):
         i_file.seek(0)
         reader = csv.reader(i_file, dialect)
     except:
-        print ("Can't open " + fname)
+        print("Can't open " + fname)
         return -1
     finally:
         feeds = []
@@ -181,21 +183,22 @@ def process_files(input_folder, output_folder, force):
     except:
         pass
     for name in names:
-        srcname = os.path.join(input_folder, name)
-        dstname = os.path.join(output_folder, name)
+        src_name = os.path.join(input_folder, name)
+        dst_name = os.path.join(output_folder, name)
         try:
-            if os.path.islink(srcname):
+            if os.path.islink(src_name):
                 pass
-            if os.path.isdir(srcname):
+            if os.path.isdir(src_name):
                 # will we support go deeper in the file hierarchy?
-                # process_files(gateways, srcname, output_folder, force)
+                # process_files(gateways, src_name, output_folder, force)
                 pass
             if (name.lower().find(".csv") > 0):
-                tdp = process_file(srcname, output_folder)
+                tdp = process_file(src_name, output_folder)
                 if tdp > 0:
                     total_data_points += tdp
+                    os.rename(src_name, dst_name)
         except (IOError, os.error) as why:
-            print((srcname, dstname, str(why)))
+            print((src_name, dst_name, str(why)))
     return total_data_points
 
 
@@ -220,14 +223,18 @@ def main(argv):
         elif opt in ("-o", "--ofiles"):
             output_folder = arg
     if (input_folder == ''):
-        input_folder = '/Users/carlos/Desktop/archive/wimd/Carlos'
+        input_folder = '/root/ftp/upload'
     if (output_folder == ''):
-        output_folder = '/Users/carlos/Desktop/archive/wimd/Carlos'
+        output_folder = input_folder + '/done'
+        try:
+            os.mkdir(output_folder)
+        except:
+            pass
     if (input_folder == '' or output_folder == ''):
         usage()
         sys.exit(3)
-    print ('Input folder is "' + input_folder + '"')
-    print ('Output folder is "' + output_folder + '"')
+    print('Input folder is "' + input_folder + '"')
+    print('Output folder is "' + output_folder + '"')
     tdp = process_files(input_folder, output_folder, force)
     end_time = time.time()
     print('Total of {0} data points set in {1} seconds'.format(tdp, end_time - start_time))
