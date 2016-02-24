@@ -25,7 +25,7 @@ import time
 from wimd import wimd
 
 
-APIKEY = 'YOUR DEVICE KEY HERE'
+APIKEY = 'b59cc3e9-dafd-11e5-8bcd-04017fd5d401'
 
 
 def getUnit(feedName):
@@ -107,7 +107,7 @@ def process_file(fname, output_folder):
     doc = {}
     print("Parsing " + fname)
     try:
-        i_file = codecs.open(fname, "rb")
+        i_file = codecs.open(fname, "rU")
         dialect = csv.Sniffer().sniff(i_file.read(32))
         i_file.seek(0)
         reader = csv.reader(i_file, dialect)
@@ -144,7 +144,7 @@ def process_file(fname, output_folder):
                 if len(row) > 0 and row[0] == '0':  # status 0 is a good data sample
                     try:
                         ts = datetime.datetime.strptime(row[2], "%Y-%m-%d %H:%M:%S")
-                        tz = row[1]
+                        tz = int(row[1])
                         ts -= datetime.timedelta(minutes=tz)
                         id = doc['devicename'] + "_" + doc['deviceid'] + "_"
                         col_number = 0
@@ -223,7 +223,7 @@ def main(argv):
         elif opt in ("-o", "--ofiles"):
             output_folder = arg
     if (input_folder == ''):
-        input_folder = '/root/ftp/upload'
+        input_folder = '/Users/carlos/Desktop/etl/csv/'
     if (output_folder == ''):
         output_folder = input_folder + '/done'
         try:
