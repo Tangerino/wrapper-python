@@ -1,6 +1,11 @@
-# wimd.etl
-WIMD.IO ETL Sample code
+![alt tag](https://wimd.io/gitlogo.jpg)
 
-This simple piece of code may be used to send data to WIMD.IO platform
-There is the generic library and some specific file parsing programs
-You need a APIKEY in order to connect to the platform
+# WIMD.IO API Python wrapper library
+
+
+
+
+
+
+# License
+See license file
