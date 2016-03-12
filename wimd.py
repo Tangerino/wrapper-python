@@ -6,6 +6,7 @@ from datetime import timedelta
 import sys
 import requests
 
+
 class wimd(object):
     BASE_URL = "http://wimd.io/v2/"
     #BASE_URL = "http://192.168.0.27/v2/"
