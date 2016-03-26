@@ -8,7 +8,7 @@ import requests
 
 
 class wimd(object):
-    BASE_URL = "http://wimd.io/v2/"
+    BASE_URL = "https://wimd.io/v2/"
     #BASE_URL = "http://192.168.0.27/v2/"
 
     def __init__(self):
@@ -188,6 +188,8 @@ class wimd(object):
             r = self.__socket.post(self.BASE_URL + 'sensor', json=payload, headers=h, verify=False)
             if r.status_code == 201 or r.status_code == 200:
                 return True, r.json()
+            else:
+                return False,r.json()
         except:
             return False, {sys.exc_info()[0]}
         return False,{}

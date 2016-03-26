@@ -1,8 +1,8 @@
 from wimd import wimd
 import random
 
-USER_LOGIN = ''
-USER_PWD   = ''
+USER_LOGIN = 'python'
+USER_PWD   = 'python'
 
 def delete_all_devices (w):
     rc, devices = w.devices_read()
@@ -104,9 +104,9 @@ def run_thing_tests(w):
     rc, resp = delete_all_things(w, place, "MY_THING_TEST")
     if rc == False:
         return rc, resp, "delete_thing_by_name"
-    rc, thing = w.thing_new(place,"MY_THING_TEST","comment")
+    rc, new_thing = w.thing_new(place,"MY_THING_TEST","comment")
     if rc == False:
-        return rc, thing, "thing_new"
+        return rc, new_thing, "thing_new"
     rc, things = w.things_read(place)
     if rc == False:
         return rc, things, "things_read"
